@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import City from "./City"
+import OriginCity from "./OriginCity"
+import DestinationCity from "./DestinationCity"
+import Quote from "./Quote"
+import CheapestDate from "./CheapestDate"
 
 const Headers = (props) => {
     const [data, setData] = useState({})
     const [originPlaces, setOPlaces] = useState([])
     const [destinationPlaces, setDPlaces] = useState([])
-
+    const [quote, setQuote] = useState({})
 
     const handleChange = (e)=>{
         // e.target.value
@@ -17,7 +21,7 @@ const Headers = (props) => {
 
             const options = {
             method: 'GET',
-            url: 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/IN/INR/en-IN/SFO-sky/JFK-sky/2021-03-15',
+            url: `https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/IN/INR/en-IN/${data.originCity}/${data.destinationCity}/2021-03-15`,
             qs: {inboundpartialdate: '2021-03-15'},
             headers: {
                 'x-rapidapi-key': '976cd8cb00msh0028629c1e15e47p1e50d5jsnd116d979d352',
@@ -28,8 +32,8 @@ const Headers = (props) => {
 
             request(options, function (error, response, body) {
                 if (error) throw new Error(error);
-
-                console.log(body);
+                // console.log(body);
+                setQuote(JSON.parse(body))
             });
     }
 
@@ -78,19 +82,25 @@ const Headers = (props) => {
     useEffect(
         ()=>{
             // console.log(places);
+            console.log(quote);
         }
         
     )
     return (
         <>
+            {/* <OriginCity data={data} setData={setData}/> */}
             <label for="origin">Origin City</label>
             <input id="origin" type="text" value={data.originCity} name="originCity" onChange={handleChange}></input>
             <button onClick={fetchOriginPlaces}>Search</button>
             <City places={originPlaces}/>
+            {/* <DestinationCity data={data} setData={setData}/> */}
             <label for="destination">Destination City</label>
             <input id="destination" type="text" value={data.destinationCity} name="destinationCity" onChange={handleChange}></input>
             <button onClick={fetchDestinationPlaces}>Search</button>
             <City places={destinationPlaces}/>
+            <Quote origin={data.originCity} destination={data.destinationCity}/>
+            <CheapestDate origin={data.originCity} destination={data.destinationCity}/>
+            {/* <button onClick={fetchQuotes}>Get Quotes</button> */}
         </>
     );
 };
