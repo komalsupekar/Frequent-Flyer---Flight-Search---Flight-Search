@@ -10,6 +10,7 @@ const OriginCity = (props) => {
         // e.target.value
         setorigin(e.target.value);
         console.log(origin)
+        
     }
     const fetchOriginPlaces=(e)=>{
         const request = require('request');
